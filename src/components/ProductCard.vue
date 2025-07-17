@@ -33,6 +33,8 @@ defineProps({
     }
   }
   &__image {
+    max-width: 100%;
+    height: auto;
     max-height: 250px;
     transition: transform 0.3s ease-in-out;
   }

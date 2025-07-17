@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 export const useProductsStore = defineStore('products', () => {
 	const allProducts = ref([]);
 	function getAllProducts() {
-		fetch('https://fakestoreapi.com/products')
+		return fetch('https://fakestoreapi.com/products')
 			.then(response => {
 				// Check if the request was successful (status code 200-299)
 				if (!response.ok) {
@@ -16,7 +16,6 @@ export const useProductsStore = defineStore('products', () => {
 			.then(data => {
 				// Log the fetched data to the console
 				allProducts.value = data;
-				console.log(allProducts.value)
 			})
 			.catch(error => {
 				// Handle any errors that occurred during the fetch operation
@@ -24,7 +23,7 @@ export const useProductsStore = defineStore('products', () => {
 			});
 	}
 	function getProductById(id) {
-		fetch('https://fakestoreapi.com/products' + id)
+		return fetch('https://fakestoreapi.com/products/' + id)
 			.then(response => {
 				// Check if the request was successful (status code 200-299)
 				if (!response.ok) {
@@ -35,7 +34,6 @@ export const useProductsStore = defineStore('products', () => {
 			})
 			.then(data => {
 				// Log the fetched data to the console
-				console.log(data)
 				return data;
 			})
 			.catch(error => {

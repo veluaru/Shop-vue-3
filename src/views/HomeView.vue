@@ -12,7 +12,12 @@
           <div class="featured__header__line"></div>
         </div>
         <div class="featured__products">
-          <ProductCard v-for="item in allProducts.slice(0, 8)" :key="item.id" :product="item" />
+          <ProductCard
+            v-for="item in allProducts.slice(0, 8)"
+            :key="item.id"
+            :product="item"
+            @click="changeView('productDetails', item)"
+          />
         </div>
       </div>
     </div>
@@ -24,12 +29,16 @@ import { ref, onBeforeMount } from 'vue'
 import ProductCard from '@/components/ProductCard.vue'
 import { useProductsStore } from '@/stores/products'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 
 const productsStore = useProductsStore()
 const { allProducts } = storeToRefs(productsStore)
 const loading = ref(false)
+const router = useRouter()
 
-const changeView = (viewName) => {}
+const changeView = (viewName, params) => {
+  router.push({ name: viewName, params: { id: params.id } })
+}
 
 onBeforeMount(async () => {
   loading.value = true
@@ -67,6 +76,7 @@ onBeforeMount(async () => {
   }
 }
 .featured {
+  width: 70%;
   &__header {
     display: flex;
     flex-direction: column;
@@ -83,16 +93,12 @@ onBeforeMount(async () => {
     }
   }
   &__products {
-    // display: flex;
-    // flex-direction: row;
-    // flex-wrap: wrap;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    max-width: 1200px;
-    margin-left: 2.5rem;
-    margin-right: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding-left: 2%;
+    padding-right: 2%;
     align-items: center;
-    gap: 2rem;
   }
 }
 </style>

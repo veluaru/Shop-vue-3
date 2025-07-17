@@ -21,7 +21,13 @@
 </template>
 
 <script setup>
-const changeView = (viewName) => {}
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const changeView = (viewName) => {
+  router.push({ name: viewName })
+}
 </script>
 
 <style scoped lang="scss">
@@ -35,6 +41,9 @@ const changeView = (viewName) => {}
   align-items: center;
   justify-content: center;
   padding: 0 10%;
+  position: sticky;
+  top: 0;
+  z-index: 10;
   @media screen and (max-width: 1024px) {
     padding: 0 5%;
   }
@@ -95,6 +104,10 @@ const changeView = (viewName) => {}
     align-items: center;
     column-gap: 15px;
     &__link {
+      cursor: pointer;
+      &:hover {
+        color: rgb(76, 81, 92);
+      }
     }
     &__cart {
       font-size: 20px;
