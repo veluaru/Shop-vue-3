@@ -11,7 +11,7 @@
           <span class="featured__header__title">Featured</span>
           <div class="featured__header__line"></div>
         </div>
-        <div class="featured__products">
+        <div class="featured__products" v-if="!loading">
           <ProductCard
             v-for="item in allProducts.slice(0, 8)"
             :key="item.id"
@@ -19,14 +19,20 @@
             @click="changeView('productDetails', item)"
           />
         </div>
+        <div class="home__loading" v-if="loading">
+          <LoadingSpinner />
+        </div>
       </div>
     </div>
+    <Footer />
   </main>
 </template>
 
 <script setup>
 import { ref, onBeforeMount } from 'vue'
 import ProductCard from '@/components/ProductCard.vue'
+import Footer from '@/components/Footer.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import { useProductsStore } from '@/stores/products'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
@@ -37,7 +43,8 @@ const loading = ref(false)
 const router = useRouter()
 
 const changeView = (viewName, params) => {
-  router.push({ name: viewName, params: { id: params.id } })
+  const parameters = params ? { params: { id: params.id } } : {}
+  router.push({ name: viewName, ...parameters })
 }
 
 onBeforeMount(async () => {
@@ -53,6 +60,12 @@ onBeforeMount(async () => {
   flex-direction: column;
   align-items: center;
   row-gap: 80px;
+  &__loading {
+  width: 100%;
+  margin-top: 10%;
+  display: flex;
+  justify-content: center;
+}
 }
 .header {
   display: flex;
@@ -95,7 +108,7 @@ onBeforeMount(async () => {
   &__products {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+    gap: 30px;
     padding-left: 2%;
     padding-right: 2%;
     align-items: center;

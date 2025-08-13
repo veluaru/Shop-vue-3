@@ -4,7 +4,7 @@
     <div class="product-card__bottom-wrapper">
       <span class="product-card__category">{{ product.category }}</span>
       <span class="product-card__title">{{ product.title }}</span>
-      <span class="product-card__price">{{ product.price }}</span>
+      <span class="product-card__price">${{ product.price }}</span>
     </div>
   </div>
 </template>
@@ -23,18 +23,20 @@ defineProps({
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 400px;
+  cursor: pointer;
 
   &:hover {
     box-shadow: 2px 2px 20px -2px rgba(0, 0, 0, 0.411);
     -webkit-box-shadow: 2px 2px 20px -2px rgba(0, 0, 0, 0.411);
     -moz-box-shadow: 2px 2px 20px -2px rgba(0, 0, 0, 0.411);
     .product-card__image {
-      transform: scale(1.1);
+      transform: scale(1.03);
     }
   }
   &__image {
     max-width: 100%;
-    height: auto;
+    height: 100%;
     max-height: 250px;
     transition: transform 0.3s ease-in-out;
   }
@@ -45,10 +47,12 @@ defineProps({
   }
   &__category {
     font-size: 12px;
+    color: #6B7280;
+    text-transform: uppercase;
   }
   &__title {
     font-size: 18px;
-    font-weight: 100;
+    font-weight: lighter;
   }
   &__price {
     font-size: 18px;

@@ -8,7 +8,7 @@
       <div class="main-nav__center">
         <div class="main-nav__center__search-bar">
           <i class="pi pi-search"></i>
-          <input type="text" placeholder="Search products..." class="main-nav__center__input" />
+          <input type="text" placeholder="Search products..." @keydown.enter.prevent="searchValue" class="main-nav__center__input" />
         </div>
       </div>
       <div class="main-nav__right">
@@ -25,8 +25,18 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const changeView = (viewName) => {
-  router.push({ name: viewName })
+const searchValue = (event) => {
+  const searchQuery = event.target.value
+  if (searchQuery) {
+    changeView('searchView', null, { query: { text: searchQuery } })
+  }
+}
+
+const changeView = (viewName, params, query) => {
+  const parameters = params ? { params: { id: params.id } } : {}
+  const queryParams = query ? query : {}
+  console.log(queryParams)
+  router.push({ name: viewName, ...parameters, ...queryParams })
 }
 </script>
 
