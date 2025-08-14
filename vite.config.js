@@ -10,7 +10,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
-  base: 'https://veluaru.github.io/Shop-vue-3/',
+  base: '',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
