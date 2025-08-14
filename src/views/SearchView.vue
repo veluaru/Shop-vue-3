@@ -24,16 +24,22 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useProductsStore } from '@/stores/products'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import ProductCard from '@/components/ProductCard.vue'
 import { categories } from '@/utils/constants'
 
 const route = useRoute()
+const router = useRouter()
 const productsStore = useProductsStore()
 const { allProducts } = storeToRefs(productsStore)
 const loading = ref(false)
+
+const changeView = (viewName, params) => {
+  const parameters = params ? { params: { id: params.id } } : {}
+  router.push({ name: viewName, ...parameters })
+}
 
 onBeforeMount(async () => {
   loading.value = true
