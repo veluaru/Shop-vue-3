@@ -7,7 +7,13 @@
 </template>
 
 <script setup>
-const changeView = () => {}
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const changeView = (viewName) => {
+  router.push({ name: viewName })
+}
 </script>
 
 <style scoped lang="scss">
@@ -16,7 +22,7 @@ const changeView = () => {}
   flex-direction: column;
   align-items: center;
   row-gap: 20px;
-  padding-top: 20px;
+  padding-top: 5%;
   &__title {
     font-size: 30px;
     font-weight: lighter;
