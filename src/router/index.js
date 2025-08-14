@@ -4,7 +4,7 @@ import ProductDetailsView from '@/views/ProductDetailsView.vue'
 import SearchView from '@/views/SearchView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
