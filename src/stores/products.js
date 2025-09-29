@@ -30,8 +30,6 @@ export const useProductsStore = defineStore('products', () => {
       return response.data; // Return the data directly
     } catch (err) {
       error.value = `Failed to fetch product ${id}.`;
-      // Optionally re-throw to let the component handle it
-      throw err;
     } finally {
       loading.value = false;
     }
