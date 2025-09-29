@@ -1,7 +1,7 @@
 <template>
   <div class="search-view">
-    <div class="search-view__header" >
-      <h1 v-if="!showAllProducts || loading" class="search-view__header__title">Search results for "{{ route.query.text }}"</h1>
+    <div class="search-view__header" v-if="!loading">
+      <h1 v-if="!showAllProducts" class="search-view__header__title">Search results for "{{ route.query.text }}"</h1>
       <h1 v-if="showAllProducts" class="search-view__header__title">All products</h1>
       <span class="search-view__header__sub-title">
         {{ filteredProducts.length }}&nbsp;products found
