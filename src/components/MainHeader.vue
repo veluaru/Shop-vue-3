@@ -1,6 +1,5 @@
 <template>
   <header class="main-header">
-    <!-- <div class="header-container"> -->
     <nav class="main-nav">
       <div class="main-nav__left">
         <span class="main-nav__left__logo-link" @click="changeView('home')">MINIMAL</span>
@@ -16,28 +15,39 @@
         <i class="pi pi-shopping-cart main-nav__right__cart"></i>
       </div>
     </nav>
-    <!-- </div> -->
   </header>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useRouter, useRoute } from 'vue-router'
+import { useProductsStore } from '@/stores/products'
+
+const productsStore = useProductsStore()
+const { searchText } = storeToRefs(productsStore)
 
 const router = useRouter()
+const route = useRoute()
 
 const searchValue = (event) => {
-  const searchQuery = event.target.value
-  if (searchQuery) {
-    changeView('searchView', null, { query: { text: searchQuery } })
+  searchText.value = event.target.value;
+  if (searchText.value) {
+    changeView('searchView', null, { query: { text: searchText.value } })
   }
 }
 
 const changeView = (viewName, params, query) => {
   const parameters = params ? { params: { id: params.id } } : {}
   const queryParams = query ? query : {}
-  console.log(queryParams)
   router.push({ name: viewName, ...parameters, ...queryParams })
 }
+
+onMounted(async () => {
+  if(route.query.text) {
+    searchText.value = route.query.text;
+  }
+})
 </script>
 
 <style scoped lang="scss">

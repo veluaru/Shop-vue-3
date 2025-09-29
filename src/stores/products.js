@@ -1,65 +1,53 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import apiClient from '../utils/clients/axios';
 
 export const useProductsStore = defineStore('products', () => {
-	const allProducts = ref([]);
-	
-	function getAllProducts() {
-		return fetch('https://fakestoreapi.com/products')
-			.then(response => {
-				// Check if the request was successful (status code 200-299)
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				// Parse the response body as JSON
-				return response.json();
-			})
-			.then(data => {
-				// Log the fetched data to the console
-				allProducts.value = data;
-			})
-			.catch(error => {
-				// Handle any errors that occurred during the fetch operation
-				console.error('Error fetching data:', error);
-			});
-	}
-	function getProductById(id) {
-		return fetch('https://fakestoreapi.com/products/' + id)
-			.then(response => {
-				// Check if the request was successful (status code 200-299)
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				// Parse the response body as JSON
-				return response.json();
-			})
-			.then(data => {
-				// Log the fetched data to the console
-				return data;
-			})
-			.catch(error => {
-				// Handle any errors that occurred during the fetch operation
-				console.error('Error fetching data:', error);
-			});
-	}
-	function getProductsByValue(value) {
-		return fetch('https://fakestoreapi.com/products' + value)
-			.then(response => {
-				// Check if the request was successful (status code 200-299)
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				// Parse the response body as JSON
-				return response.json();
-			})
-			.then(data => {
-				// Log the fetched data to the console
-				allProducts.value = data;
-			})
-			.catch(error => {
-				// Handle any errors that occurred during the fetch operation
-				console.error('Error fetching data:', error);
-			});
-	}
-	return { allProducts, getAllProducts, getProductById, getProductsByValue }
+  const allProducts = ref([]);
+  const searchText = ref('');
+  const loading = ref(false);
+  const error = ref(null);
+
+  async function getAllProducts() {
+    loading.value = true;
+    error.value = null;
+    try {
+      const response = await apiClient.get('/products');
+      allProducts.value = response.data;
+    } catch (err) {
+      error.value = 'Failed to fetch products.';
+      // The global error handling already ran in the interceptor!
+      // Here you can set a local state specific to this action if needed.
+    } finally {
+      loading.value = false;
+    }
+  }
+  async function getProductById(id) {
+    loading.value = true;
+    error.value = null;
+    try {
+      const response = await apiClient.get('/products/' + id);
+      return response.data; // Return the data directly
+    } catch (err) {
+      error.value = `Failed to fetch product ${id}.`;
+      // Optionally re-throw to let the component handle it
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+  async function getProductsByValue(value) {
+    loading.value = true;
+    error.value = null;
+    try {
+      // API doesn't provide a request by value endpoint
+      const response = await apiClient.get('/products/' + value);
+      return response.data; // Return the data directly
+    } catch (err) {
+      error.value = 'Failed to filter products.';
+    } finally {
+      loading.value = false;
+    }
+  }
+  return { allProducts, searchText, getAllProducts, getProductById, getProductsByValue }
 })

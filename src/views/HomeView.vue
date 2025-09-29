@@ -4,7 +4,7 @@
       <div class="header">
         <span class="header__title">Less is More</span>
         <span class="header__sub-title">Curated essentials for the modern lifestyle</span>
-        <button class="header__button" @click="changeView('home')">SHOP NOW</button>
+        <button class="header__button" @click="changeView('searchView')">SHOP NOW</button>
       </div>
       <div class="featured">
         <div class="featured__header">
@@ -109,8 +109,8 @@ onBeforeMount(async () => {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
-    padding-left: 2%;
-    padding-right: 2%;
+    padding-left: 1%;
+    padding-right: 1%;
     align-items: center;
   }
 }

@@ -1,20 +1,21 @@
 <template>
   <div class="search-view">
-    <div class="search-view__header">
-      <h1 class="search-view__header__title">Search results for "{{ route.query.text }}"</h1>
+    <div class="search-view__header" >
+      <h1 v-if="!showAllProducts || loading" class="search-view__header__title">Search results for "{{ route.query.text }}"</h1>
+      <h1 v-if="showAllProducts" class="search-view__header__title">All products</h1>
       <span class="search-view__header__sub-title">
-        {{ allProducts.length }}&nbsp;products found
+        {{ filteredProducts.length }}&nbsp;products found
       </span>
     </div>
     <div class="search-view__products" v-if="!loading">
       <ProductCard
-        v-for="item in allProducts"
+        v-for="item in filteredProducts"
         :key="item.id"
         :product="item"
         @click="changeView('productDetails', item)"
       />
     </div>
-    <p v-if="!loading && allProducts.length === 0">No products found.</p>
+    <p v-if="!loading && filteredProducts.length === 0">No products found.</p>
     <div class="search-view__loading" v-if="loading">
       <LoadingSpinner />
     </div>
@@ -22,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { useProductsStore } from '@/stores/products'
@@ -33,20 +34,35 @@ import { categories } from '@/utils/constants'
 const route = useRoute()
 const router = useRouter()
 const productsStore = useProductsStore()
-const { allProducts } = storeToRefs(productsStore)
+const { allProducts, searchText } = storeToRefs(productsStore)
+const filteredProducts = ref([]);
 const loading = ref(false)
+const showAllProducts = ref(true);
 
 const changeView = (viewName, params) => {
   const parameters = params ? { params: { id: params.id } } : {}
   router.push({ name: viewName, ...parameters })
 }
 
-onBeforeMount(async () => {
+const getProducts = async (text) => {
   loading.value = true
   //   await productsStore.getProductsByValue(route.query.text || '')
-  await productsStore.getAllProducts()
+  await productsStore.getAllProducts();
+  filteredProducts.value = text && text !== '' ? allProducts.value.filter(product => product.title.toLowerCase().includes(text.toLowerCase())) : allProducts.value;
+  showAllProducts.value = text && text !== '' ? false : true;
   loading.value = false
+}
+
+onBeforeMount(async () => {
+  getProducts(route.query.text);
 })
+
+watch(
+  () => searchText.value,
+  (newValue) => {
+    getProducts(newValue);
+  }
+);
 </script>
 
 <style scoped lang="scss">
